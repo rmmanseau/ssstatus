@@ -89,7 +89,6 @@ def export_status(status):
         status_file.write(status)
 
 def setup():
-    os.makedirs(config_dir, exist_ok=True)
     with open(config_dir + 'status', 'w+') as status_file:
         status_file.write('setup complete\n')
     with open(config_dir + 'config', 'w+') as config_file:
@@ -152,6 +151,8 @@ def line_up():
 def line_down():
     set_current_line(import_config_int('current_line', 1)+1)
 
+if not os.path.exists(config_dir):
+    os.makedirs(config_dir)
 while os.path.isfile(config_dir + 'lock'):
     time.sleep(0.1)
 lockfile = open(config_dir + 'lock', 'w+')
