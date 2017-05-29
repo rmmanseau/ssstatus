@@ -16,7 +16,6 @@ def print_help():
     print('show                 - outputs the current status line (defualt line 1)')
     print('up                   - scrolls the current line down the status')
     print('down                 - scrolls the current line up the status')
-    print('setup                - sets up ssstatus configuration at ~/.config/ssstatus (will overwrite current configuration)')
 
 def clamp(value, smallest, largest):
     return max(smallest, min(value, largest))
@@ -88,14 +87,6 @@ def export_status(status):
     with open(config_dir + 'status', 'w') as status_file:
         status_file.write(status)
 
-def setup():
-    with open(config_dir + 'status', 'w+') as status_file:
-        status_file.write('setup complete\n')
-    with open(config_dir + 'config', 'w+') as config_file:
-        config_file.write('max_length=80\ncurrent_line=1\ntotal_lines=1\n')
-    with open(config_dir + 'log', 'w+') as log_file:
-        log_file.write('log file created\n')
-
 def format_status(unformatted, max_line_length):
     formatted=''
     next_append=''
@@ -151,12 +142,28 @@ def line_up():
 def line_down():
     set_current_line(import_config_int('current_line', 1)+1)
 
+
+
 if not os.path.exists(config_dir):
     os.makedirs(config_dir)
+
+if not os.path.isfile(config_dir + 'status'):
+    with open(config_dir + 'status', 'w+') as status_file:
+        status_file.write('setup complete\n')
+
+if not os.path.isfile(config_dir + 'config'):
+    with open(config_dir + 'config', 'w+') as config_file:
+        config_file.write('max_length=80\ncurrent_line=1\ntotal_lines=1\n')
+
+if not os.path.isfile(config_dir + 'log'):
+    with open(config_dir + 'log', 'w+') as log_file:
+        log_file.write('log file created\n')
+
 while os.path.isfile(config_dir + 'lock'):
     time.sleep(0.1)
+    print "whaaaaaaaat"
+
 lockfile = open(config_dir + 'lock', 'w+')
-lockfile.close()
 
 if len(sys.argv) > 2:
     if   sys.argv[1] == 'set':
@@ -178,8 +185,6 @@ elif len(sys.argv) > 1:
         line_up()
     elif sys.argv[1] == 'down':
         line_down()
-    elif sys.argv[1] == 'setup':
-        setup()
     else:
         print_help()
 else:

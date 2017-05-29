@@ -4,7 +4,7 @@ _ssstatus()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="set setlength show up down setup clear"
+    opts="set setlength show up down clear"
 
     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
     return 0
